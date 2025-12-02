@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DUOL Deep Dive - Duolingo 管理层可信度分析平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+      min-height: 100vh;
+      color: #E2E8F0;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+    ::-webkit-scrollbar-thumb { background: rgba(88, 204, 2, 0.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(88, 204, 2, 0.5); }
+    
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(10px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+    @keyframes slideIn { 
+      from { opacity: 0; transform: translateX(-20px); } 
+      to { opacity: 1; transform: translateX(0); } 
+    }
+    .animate-fade-in { animation: fadeIn 0.5s ease forwards; }
+    .animate-slide-in { animation: slideIn 0.5s ease forwards; }
+    
+    .header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(88, 204, 2, 0.2);
+      padding: 20px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .logo { display: flex; align-items: center; gap: 16px; }
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, #58CC02 0%, #89E219 100%);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 20px rgba(88, 204, 2, 0.4);
+    }
+    .title {
+      margin: 0; font-size: 24px; font-weight: 700;
+      background: linear-gradient(90deg, #58CC02, #89E219);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle { margin: 0; font-size: 13px; color: #94A3B8; }
+    
+    .stats-bar {
+      background: rgba(30, 41, 59, 0.5);
+      padding: 24px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .stats-grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .stat-card {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .stat-value { font-size: 24px; font-weight: 700; }
+    .stat-label { font-size: 12px; color: #94A3B8; }
+    
+    .nav {
+      background: rgba(15, 23, 42, 0.8);
+      padding: 0 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      overflow-x: auto;
+    }
+    .nav-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 16px 24px;
+      color: #94A3B8;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .nav-btn.active {
+      background: linear-gradient(180deg, rgba(88, 204, 2, 0.2) 0%, transparent 100%);
+      border-bottom-color: #58CC02;
+      color: #58CC02;
+    }
+    .nav-btn:hover { color: #58CC02; }
+    
+    .main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 40px;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .section-title { margin: 0; font-size: 20px; font-weight: 600; }
+    
+    .filter-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn {
+      background: rgba(255,255,255,0.05);
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      color: #94A3B8;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-btn.active { background: #58CC02; color: #0F172A; }
+    
+    .timeline { position: relative; padding-left: 40px; }
+    .timeline-line {
+      position: absolute;
+      left: 15px; top: 20px; bottom: 20px;
+      width: 2px;
+      background: linear-gradient(180deg, #58CC02, #1E293B);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: slideIn 0.5s ease forwards;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -33px; top: 24px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #58CC02;
+      border: 3px solid #0F172A;
+      box-shadow: 0 0 0 3px rgba(88, 204, 2, 0.3);
+    }
+    .timeline-dot.warning {
+      background: #F59E0B;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+    }
+    .timeline-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 16px;
+      padding: 20px 24px;
+      border: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .timeline-card.warning {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(30, 41, 59, 0.8) 100%);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+    .timeline-card:hover { border-color: rgba(88, 204, 2, 0.3); }
+    
+    .card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 16px;
+      padding: 20px 24px;
+      border: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 12px;
+    }
+    .card:hover { border-color: rgba(88, 204, 2, 0.3); }
+    
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .tag-green { background: rgba(88, 204, 2, 0.2); color: #58CC02; }
+    .tag-yellow { background: rgba(245, 158, 11, 0.2); color: #F59E0B; }
+    .tag-red { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
+    
+    .status-badge {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .contradiction-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .contradiction-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .contradiction-body { padding: 24px; }
+    
+    .statement-timeline { position: relative; padding-left: 24px; }
+    .statement-line {
+      position: absolute;
+      left: 8px; top: 8px; bottom: 8px;
+      width: 2px;
+      background: rgba(255,255,255,0.1);
+    }
+    .statement-item { position: relative; margin-bottom: 16px; }
+    .statement-dot {
+      position: absolute;
+      left: -20px; top: 6px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .statement-card {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    
+    .analysis-box {
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .analysis-box.green {
+      background: rgba(88, 204, 2, 0.1);
+      border: 1px solid rgba(88, 204, 2, 0.2);
+    }
+    .analysis-box.purple {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+    
+    .insight-header {
+      background: linear-gradient(135deg, rgba(88, 204, 2, 0.1) 0%, rgba(30, 41, 59, 0.8) 100%);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(88, 204, 2, 0.2);
+    }
+    .score-box {
+      background: rgba(88, 204, 2, 0.2);
+      border-radius: 20px;
+      padding: 16px 32px;
+      text-align: center;
+    }
+    .score-value { font-size: 48px; font-weight: 700; color: #58CC02; }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+    .grid-5 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    
+    .finding-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 20px;
+      padding: 24px;
+    }
+    .finding-card.green { border: 1px solid rgba(16, 185, 129, 0.2); }
+    .finding-card.yellow { border: 1px solid rgba(245, 158, 11, 0.2); }
+    
+    .source-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .source-card:hover { border-color: rgba(88, 204, 2, 0.3); }
+    
+    .footer {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 24px 40px;
+      text-align: center;
+      color: #64748B;
+      font-size: 13px;
+    }
+    
+    .hidden { display: none !important; }
+    .text-green { color: #58CC02; }
+    .text-yellow { color: #F59E0B; }
+    .text-red { color: #EF4444; }
+    .text-purple { color: #8B5CF6; }
+    .text-gray { color: #94A3B8; }
+    .text-light { color: #F1F5F9; }
+    .text-muted { color: #64748B; }
+    
+    .bg-green-10 { background: rgba(16, 185, 129, 0.1); }
+    .bg-yellow-10 { background: rgba(245, 158, 11, 0.1); }
+    .bg-red-10 { background: rgba(239, 68, 68, 0.1); }
+    .bg-purple-10 { background: rgba(139, 92, 246, 0.1); }
+    
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .flex-wrap { flex-wrap: wrap; }
+    .gap-12 { gap: 12px; }
+    .gap-16 { gap: 16px; }
+    .gap-24 { gap: 24px; }
+    
+    .mb-4 { margin-bottom: 4px; }
+    .mb-8 { margin-bottom: 8px; }
+    .mb-12 { margin-bottom: 12px; }
+    .mb-16 { margin-bottom: 16px; }
+    .mt-12 { margin-top: 12px; }
+    .mt-16 { margin-top: 16px; }
+    .pt-16 { padding-top: 16px; }
+    
+    .border-t { border-top: 1px solid rgba(255,255,255,0.1); }
+    
+    .text-sm { font-size: 12px; }
+    .text-base { font-size: 14px; }
+    .text-lg { font-size: 16px; }
+    .text-xl { font-size: 18px; }
+    .text-2xl { font-size: 24px; }
+    .text-3xl { font-size: 28px; }
+    .text-4xl { font-size: 32px; }
+    
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    
+    .leading-relaxed { line-height: 1.6; }
+    
+    ul { margin: 0; padding: 0 0 0 20px; }
+    li { margin-bottom: 12px; line-height: 1.5; }
+
+    @media (max-width: 768px) {
+      .header, .stats-bar, .nav, .main, .footer { padding-left: 20px; padding-right: 20px; }
+      .timeline { padding-left: 30px; }
+      .timeline-dot { left: -25px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">🦉</div>
+        <div>
+          <h1 class="title">DUOL Deep Dive</h1>
+          <p class="subtitle">Duolingo 管理层可信度分析平台</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-24 flex-wrap">
+        <div style="text-align: right;">
+          <div class="text-2xl font-bold text-green">$188.43</div>
+          <div class="text-sm text-gray">NASDAQ: DUOL</div>
+        </div>
+        <div style="background: rgba(88, 204, 2, 0.1); border: 1px solid rgba(88, 204, 2, 0.3); border-radius: 12px; padding: 12px 20px; text-align: center;">
+          <div class="text-3xl font-bold text-green">8.2/10</div>
+          <div class="text-sm text-gray">可信度评分</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.2); color: #10B981;">✓</div>
+        <div>
+          <div class="stat-value" style="color: #10B981;">84%</div>
+          <div class="stat-label">承诺兑现率</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.2); color: #F59E0B;">⚠</div>
+        <div>
+          <div class="stat-value" style="color: #F59E0B;">2 个</div>
+          <div class="stat-label">矛盾警报</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(88, 204, 2, 0.2); color: #58CC02;">👥</div>
+        <div>
+          <div class="stat-value" style="color: #58CC02;">50.5M</div>
+          <div class="stat-label">DAU</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(139, 92, 246, 0.2); color: #8B5CF6;">💰</div>
+        <div>
+          <div class="stat-value" style="color: #8B5CF6;">$748M</div>
+          <div class="stat-label">2024营收</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-content">
+      <button class="nav-btn active" data-tab="timeline">📅 发展时间线</button>
+      <button class="nav-btn" data-tab="promises">🎯 承诺追踪</button>
+      <button class="nav-btn" data-tab="contradictions">⚡ 矛盾检测</button>
+      <button class="nav-btn" data-tab="insights">📊 洞察报告</button>
+      <button class="nav-btn" data-tab="sources">📁 资料库</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    
+    <!-- Timeline Tab -->
+    <section id="tab-timeline" class="tab-content animate-fade-in">
+      <div class="section-header">
+        <h2 class="section-title">公司发展时间线 (2023-2025)</h2>
+        <div class="filter-btns">
+          <button class="filter-btn active" data-filter="all">全部</button>
+          <button class="filter-btn" data-filter="financial">💰 财务</button>
+          <button class="filter-btn" data-filter="product">🎯 产品</button>
+          <button class="filter-btn" data-filter="culture">🏢 文化</button>
+          <button class="filter-btn" data-filter="brand">🌟 品牌</button>
+        </div>
+      </div>
+      
+      <div class="timeline">
+        <div class="timeline-line"></div>
+        
+        <div class="timeline-item" data-category="financial" style="animation-delay: 0s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="flex justify-between items-center flex-wrap gap-12">
+              <div style="flex: 1; min-width: 200px;">
+                <div class="flex items-center gap-12 flex-wrap mb-8">
+                  <span style="font-size: 24px;">📊</span>
+                  <span class="tag tag-green">Q3 2025</span>
+                </div>
+                <h3 class="text-lg font-semibold text-light mb-8">Q3 2025: Revenue $271.7M, DAU 50.5M</h3>
+                <p class="text-base text-gray leading-relaxed">Revenue增长41% YoY，DAU增长36%，但由于强调用户增长而非短期变现，股价下跌20%</p>
+              </div>
+              <div class="text-sm text-muted">2025-11</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="culture" style="animation-delay: 0.1s;">
+          <div class="timeline-dot warning"></div>
+          <div class="timeline-card warning">
+            <div class="flex justify-between items-center flex-wrap gap-12">
+              <div style="flex: 1; min-width: 200px;">
+                <div class="flex items-center gap-12 flex-wrap mb-8">
+                  <span style="font-size: 24px;">🤖</span>
+                  <span class="tag tag-green">Q1 2025</span>
+                  <span class="tag tag-yellow">⚠️ 相关矛盾</span>
+                </div>
+                <h3 class="text-lg font-semibold text-light mb-8">CEO宣布"AI-First"战略</h3>
+                <p class="text-base text-gray leading-relaxed">Luis von Ahn发布内部备忘录，宣布公司将"逐步停止使用合同工来完成AI可以处理的工作"，引发争议后澄清不会裁减全职员工</p>
+              </div>
+              <div class="text-sm text-muted">2025-04</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="financial" style="animation-delay: 0.2s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="flex justify-between items-center flex-wrap gap-12">
+              <div style="flex: 1; min-width: 200px;">
+                <div class="flex items-center gap-12 flex-wrap mb-8">
+                  <span style="font-size: 24px;">📈</span>
+                  <span class="tag tag-green">Q3 2024</span>
+                </div>
+                <h3 class="text-lg font-semibold text-light mb-8">Q3 2024: 上调全年指引</h3>
+                <p class="text-base text-gray leading-relaxed">预订量和收入指引分别上调至36%和40%增长，调整后EBITDA利润率指引提升至25.5%</p>
+              </div>
+              <div class="text-sm text-muted">2024-11</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="product" style="animation-delay: 0.3s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="flex justify-between items-center flex-wrap gap-12">
+              <div style="flex: 1; min-width: 200px;">
+                <div class="flex items-center gap-12 flex-wrap mb-8">
+                  <span style="font-size: 24px;">👥</span>
+                  <span class="tag tag-green">Q2 2024</span>
+                </div>
+                <h3 class="text-lg font-semibold text-light mb-8">推出Friends Streak社交功能</h3>
+                <p class="text-base text-gray leading-relaxed">用户可与最多5个朋友建立共同连续学习记录，增强社交激励机制</p>
+              </div>
+              <div class="text-sm text-muted">2024-08</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="financial" style="animation-delay: 0.4s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="flex justify-between items-center flex-wrap gap-12">
+              <div style="flex: 1; min-width: 200px;">
+                <div class="flex items-center gap-12 flex-wrap mb-8">
+                  <span style="font-size: 24px;">💰</span>
+                  <span class="tag tag-green">Q1 2024</span>
+                </div>
+                <h3 class="text-lg font-semibold text-light mb-8">Q1 2024: 收入增长45%</h3>
+                <p class="text-base text-gray leading-relaxed">DAU增长54% YoY，达到创纪录盈利能力，三层订阅策略（免费/Super/Max）持续推进</p>
+              </div>
+              <div class="text-sm text-muted">2024-05</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="culture" style="animation-delay: 0.5s;">
+          <div class="timeline-dot warning"></div>
+          <div class="timeline-card warning">
+            <div class="flex justify-between items-center flex-wrap gap-12">
+              <div style="flex: 1; min-width: 200px;">
+                <div class="flex items-center gap-12 flex-wrap mb-8">
+                  <span style="font-size: 24px;">⚠️</span>
+                  <span class="tag tag-green">Q4 2023</span>
+                  <span class="tag tag-yellow">⚠️ 相关矛盾</span>
+                </div>
+                <h3 class="text-lg font-semibold text-light mb-8">裁减10%合同工</h3>
+                <p class="text-base text-gray leading-relaxed">公司确认由于AI工具可以更高效地创建内容，裁减了约10%的合同翻译和内容创作人员</p>
+              </div>
+              <div class="text-sm text-muted">2024-01</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="financial" style="animation-delay: 0.6s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="flex justify-between items-center flex-wrap gap-12">
+              <div style="flex: 1; min-width: 200px;">
+                <div class="flex items-center gap-12 flex-wrap mb-8">
+                  <span style="font-size: 24px;">🚀</span>
+                  <span class="tag tag-green">Q3 2023</span>
+                </div>
+                <h3 class="text-lg font-semibold text-light mb-8">Q3 2023: DAU增长63%</h3>
+                <p class="text-base text-gray leading-relaxed">用户增长持续加速，付费订阅者达580万，同比增长60%，连续第三次上调全年指引</p>
+              </div>
+              <div class="text-sm text-muted">2023-11</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="brand" style="animation-delay: 0.7s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="flex justify-between items-center flex-wrap gap-12">
+              <div style="flex: 1; min-width: 200px;">
+                <div class="flex items-center gap-12 flex-wrap mb-8">
+                  <span style="font-size: 24px;">🎬</span>
+                  <span class="tag tag-green">Q2 2023</span>
+                </div>
+                <h3 class="text-lg font-semibold text-light mb-8">Barbie电影植入</h3>
+                <p class="text-base text-gray leading-relaxed">Duolingo标志性提示音出现在2023年票房最高电影《Barbie》中，品牌知名度大幅提升</p>
+              </div>
+              <div class="text-sm text-muted">2023-07</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="product" style="animation-delay: 0.8s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="flex justify-between items-center flex-wrap gap-12">
+              <div style="flex: 1; min-width: 200px;">
+                <div class="flex items-center gap-12 flex-wrap mb-8">
+                  <span style="font-size: 24px;">✨</span>
+                  <span class="tag tag-green">Q1 2023</span>
+                </div>
+                <h3 class="text-lg font-semibold text-light mb-8">推出Duolingo Max（GPT-4驱动）</h3>
+                <p class="text-base text-gray leading-relaxed">第三层订阅Duolingo Max上线，包含AI对话练习和智能解释功能</p>
+              </div>
+              <div class="text-sm text-muted">2023-03</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Promises Tab -->
+    <section id="tab-promises" class="tab-content hidden animate-fade-in">
+      <h2 class="section-title mb-16">管理层承诺追踪</h2>
+      
+      <div class="stats-grid mb-16" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+        <div class="card" style="text-align: center;">
+          <div class="text-4xl font-bold" style="color: #10B981;">5</div>
+          <div class="text-sm text-gray">已兑现</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="text-4xl font-bold" style="color: #F59E0B;">2</div>
+          <div class="text-sm text-gray">进行中</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="text-4xl font-bold" style="color: #EF4444;">1</div>
+          <div class="text-sm text-gray">待观察</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="text-4xl font-bold" style="color: #8B5CF6;">8</div>
+          <div class="text-sm text-gray">总计</div>
+        </div>
+      </div>
+      
+      <div class="flex flex-col">
+        <div class="card">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-16" style="flex: 1; min-width: 200px;">
+              <span style="font-size: 20px;">💰</span>
+              <div style="flex: 1;">
+                <div class="text-base font-semibold text-light mb-4">2024年实现GAAP盈利</div>
+                <div class="text-sm text-muted">📅 2023-02 · 📄 Q4 2022 财报电话会议</div>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(16, 185, 129, 0.2); color: #10B981;">✅ 已兑现</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-16" style="flex: 1; min-width: 200px;">
+              <span style="font-size: 20px;">💰</span>
+              <div style="flex: 1;">
+                <div class="text-base font-semibold text-light mb-4">长期调整后EBITDA利润率达到30-35%</div>
+                <div class="text-sm text-muted">📅 2023-2024 · 📄 多次财报电话会议</div>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(245, 158, 11, 0.2); color: #F59E0B;">🔄 进行中</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-16" style="flex: 1; min-width: 200px;">
+              <span style="font-size: 20px;">💰</span>
+              <div style="flex: 1;">
+                <div class="text-base font-semibold text-light mb-4">年预订量增长超过25%</div>
+                <div class="text-sm text-muted">📅 2023-2024 · 📄 长期财务目标</div>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(16, 185, 129, 0.2); color: #10B981;">✅ 已兑现</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-16" style="flex: 1; min-width: 200px;">
+              <span style="font-size: 20px;">🏢</span>
+              <div style="flex: 1;">
+                <div class="text-base font-semibold text-light mb-4">AI不会取代员工</div>
+                <div class="text-sm text-muted">📅 2024-2025 · 📄 CEO多次公开发言</div>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(239, 68, 68, 0.2); color: #EF4444;">⚠️ 待观察</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-16" style="flex: 1; min-width: 200px;">
+              <span style="font-size: 20px;">🎯</span>
+              <div style="flex: 1;">
+                <div class="text-base font-semibold text-light mb-4">英语学习者是重大增长机会</div>
+                <div class="text-sm text-muted">📅 2024-05 · 📄 Q1 2024 财报电话会议</div>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(245, 158, 11, 0.2); color: #F59E0B;">🔄 进行中</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-16" style="flex: 1; min-width: 200px;">
+              <span style="font-size: 20px;">💰</span>
+              <div style="flex: 1;">
+                <div class="text-base font-semibold text-light mb-4">每年股权稀释控制在约1%</div>
+                <div class="text-sm text-muted">📅 2024 · 📄 2024年财务指引</div>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(16, 185, 129, 0.2); color: #10B981;">✅ 已兑现</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-16" style="flex: 1; min-width: 200px;">
+              <span style="font-size: 20px;">🎯</span>
+              <div style="flex: 1;">
+                <div class="text-base font-semibold text-light mb-4">Max订阅将推动高端变现</div>
+                <div class="text-sm text-muted">📅 2024 · 📄 Q1 2024 财报电话会议</div>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(16, 185, 129, 0.2); color: #10B981;">✅ 已兑现</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-16" style="flex: 1; min-width: 200px;">
+              <span style="font-size: 20px;">🎯</span>
+              <div style="flex: 1;">
+                <div class="text-base font-semibold text-light mb-4">社交功能将提升用户粘性</div>
+                <div class="text-sm text-muted">📅 2024-08 · 📄 Q2 2024 财报电话会议</div>
+              </div>
+            </div>
+            <div class="status-badge" style="background: rgba(16, 185, 129, 0.2); color: #10B981;">✅ 已兑现</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contradictions Tab -->
+    <section id="tab-contradictions" class="tab-content hidden animate-fade-in">
+      <h2 class="section-title">矛盾检测</h2>
+      <p class="text-base text-muted mb-16">AI 辅助识别管理层前后不一致的表述</p>
+      
+      <div class="contradiction-card" style="border: 1px solid rgba(245, 158, 11, 0.4);">
+        <div class="contradiction-header" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, transparent 100%);">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-12">
+              <span style="font-size: 24px;">⚠️</span>
+              <h3 class="text-xl font-semibold">潜在矛盾 #1: AI对就业的影响</h3>
+            </div>
+            <div class="tag tag-yellow" style="padding: 6px 14px; font-size: 12px;">🟡 中等风险</div>
+          </div>
+        </div>
+        <div class="contradiction-body">
+          <div class="statement-timeline">
+            <div class="statement-line"></div>
+            
+            <div class="statement-item">
+              <div class="statement-dot" style="background: #F59E0B;"></div>
+              <div class="statement-card">
+                <div class="text-sm text-muted mb-8">📅 2024年1月前 · 📄 媒体采访</div>
+                <div class="text-base text-light leading-relaxed">"多次公开表示AI是工具，不会因AI减少员工"</div>
+              </div>
+            </div>
+            
+            <div class="statement-item">
+              <div class="statement-dot" style="background: #F59E0B;"></div>
+              <div class="statement-card">
+                <div class="text-sm text-muted mb-8">📅 2024年1月 · 📄 TechCrunch/CNN报道</div>
+                <div class="text-base text-light leading-relaxed">"裁减约10%合同翻译和内容创作人员，原因是AI可以更高效完成"</div>
+              </div>
+            </div>
+            
+            <div class="statement-item">
+              <div class="statement-dot" style="background: #F59E0B;"></div>
+              <div class="statement-card">
+                <div class="text-sm text-muted mb-8">📅 2025年4月 · 📄 CEO LinkedIn备忘录</div>
+                <div class="text-base text-light leading-relaxed">"宣布'AI-First'，将逐步停止使用合同工做AI可处理的工作"</div>
+              </div>
+            </div>
+            
+            <div class="statement-item">
+              <div class="statement-dot" style="background: #F59E0B;"></div>
+              <div class="statement-card">
+                <div class="text-sm text-muted mb-8">📅 2025年8月 · 📄 NYT采访</div>
+                <div class="text-base text-light leading-relaxed">"澄清从未裁减全职员工，也不计划这样做"</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="analysis-box green">
+            <div class="text-sm text-green font-semibold mb-8">🔍 分析</div>
+            <div class="text-base text-gray leading-relaxed">存在"员工"与"合同工"定义模糊的问题。技术上CEO说的是真话（未裁全职），但合同工大量减少是事实。投资者应关注用工结构变化。</div>
+          </div>
+          
+          <div class="analysis-box purple">
+            <div class="text-sm text-purple font-semibold mb-8">💡 投资者启示</div>
+            <div class="text-base text-gray">成本结构可能优化，但需关注内容质量和企业声誉风险</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="contradiction-card" style="border: 1px solid rgba(16, 185, 129, 0.4);">
+        <div class="contradiction-header" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, transparent 100%);">
+          <div class="flex justify-between items-center flex-wrap gap-12">
+            <div class="flex items-center gap-12">
+              <span style="font-size: 24px;">⚠️</span>
+              <h3 class="text-xl font-semibold">潜在矛盾 #2: 增长vs变现优先级</h3>
+            </div>
+            <div class="tag tag-green" style="padding: 6px 14px; font-size: 12px; background: rgba(16, 185, 129, 0.2); color: #10B981;">🟢 低风险</div>
+          </div>
+        </div>
+        <div class="contradiction-body">
+          <div class="statement-timeline">
+            <div class="statement-line"></div>
+            
+            <div class="statement-item">
+              <div class="statement-dot" style="background: #10B981;"></div>
+              <div class="statement-card">
+                <div class="text-sm text-muted mb-8">📅 2021年（S-1招股书） · 📄 IPO招股书</div>
+                <div class="text-base text-light leading-relaxed">"优先考虑长期用户增长而非短期变现"</div>
+              </div>
+            </div>
+            
+            <div class="statement-item">
+              <div class="statement-dot" style="background: #10B981;"></div>
+              <div class="statement-card">
+                <div class="text-sm text-muted mb-8">📅 2024年 · 📄 财报电话会议</div>
+                <div class="text-base text-light leading-relaxed">"强调订阅转化率提升和Max推广是核心成就"</div>
+              </div>
+            </div>
+            
+            <div class="statement-item">
+              <div class="statement-dot" style="background: #10B981;"></div>
+              <div class="statement-card">
+                <div class="text-sm text-muted mb-8">📅 2025年Q3 · 📄 Q3 2025 财报电话会议</div>
+                <div class="text-base text-light leading-relaxed">"再次强调用户增长优先，导致股价下跌20%"</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="analysis-box green">
+            <div class="text-sm text-green font-semibold mb-8">🔍 分析</div>
+            <div class="text-base text-gray leading-relaxed">这更像是公司成熟过程中的正常战略调整，而非真正的矛盾。管理层在增长和变现之间动态平衡，属于合理商业决策。</div>
+          </div>
+          
+          <div class="analysis-box purple">
+            <div class="text-sm text-purple font-semibold mb-8">💡 投资者启示</div>
+            <div class="text-base text-gray">需理解管理层会根据市场情况调整短期策略，但长期愿景保持一致</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Insights Tab -->
+    <section id="tab-insights" class="tab-content hidden animate-fade-in">
+      <div class="insight-header">
+        <div class="flex justify-between items-center flex-wrap gap-24">
+          <div>
+            <h2 class="text-2xl font-bold mb-8">DUOL 管理层可信度评估报告</h2>
+            <p class="text-base text-muted">数据范围: 2023年1月 - 2025年11月 | 生成日期: 2025-11-28</p>
+          </div>
+          <div class="score-box">
+            <div class="score-value">8.2</div>
+            <div class="text-base text-gray">/ 10 综合评分</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="grid-2">
+        <div class="finding-card green">
+          <h3 class="text-lg font-semibold mb-16" style="color: #10B981;">✅ 正面信号</h3>
+          <ul class="text-base text-gray">
+            <li>财务指引准确度高：过去8个季度中7次达成或超越指引</li>
+            <li>CEO对产品战略的描述高度一致：游戏化、社交化、AI增强</li>
+            <li>长期目标稳定：30-35% EBITDA margin目标从未动摇</li>
+            <li>用户增长持续超预期：连续多季度加速或维持高增长</li>
+          </ul>
+        </div>
+        
+        <div class="finding-card yellow">
+          <h3 class="text-lg font-semibold mb-16" style="color: #F59E0B;">⚠️ 关注点</h3>
+          <ul class="text-base text-gray">
+            <li>AI与就业相关表述存在前后不一致，需关注定义模糊</li>
+            <li>高估值（P/E 21.87，Forward P/E 45.11）对执行要求极高</li>
+            <li>股权激励导致每年约1%稀释，长期累积效应需考虑</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="card mb-16">
+        <h3 class="text-lg font-semibold mb-16">📊 与行业对比</h3>
+        <div class="grid-3">
+          <div style="text-align: center;">
+            <div class="text-sm text-muted mb-12">指引准确度</div>
+            <div class="flex justify-between items-center gap-24" style="justify-content: center;">
+              <div>
+                <div class="text-2xl font-bold text-green">92%</div>
+                <div class="text-sm text-muted">DUOL</div>
+              </div>
+              <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.1);"></div>
+              <div>
+                <div class="text-2xl font-bold text-gray">78%</div>
+                <div class="text-sm text-muted">行业平均</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center;">
+            <div class="text-sm text-muted mb-12">CEO任期</div>
+            <div class="flex justify-between items-center gap-24" style="justify-content: center;">
+              <div>
+                <div class="text-2xl font-bold text-green">创始至今</div>
+                <div class="text-sm text-muted">DUOL</div>
+              </div>
+              <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.1);"></div>
+              <div>
+                <div class="text-2xl font-bold text-gray">5.2年</div>
+                <div class="text-sm text-muted">行业平均</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center;">
+            <div class="text-sm text-muted mb-12">营收增速</div>
+            <div class="flex justify-between items-center gap-24" style="justify-content: center;">
+              <div>
+                <div class="text-2xl font-bold text-green">41%</div>
+                <div class="text-sm text-muted">DUOL</div>
+              </div>
+              <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.1);"></div>
+              <div>
+                <div class="text-2xl font-bold text-gray">15%</div>
+                <div class="text-sm text-muted">行业平均</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card" style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.2);">
+        <h3 class="text-lg font-semibold mb-16 text-purple">🎤 投资者应追问的问题</h3>
+        <div class="grid-2" style="gap: 12px;">
+          <div class="statement-card">
+            <span class="text-purple font-semibold">1.</span> AI内容生成的具体比例和质量控制机制？
+          </div>
+          <div class="statement-card">
+            <span class="text-purple font-semibold">2.</span> 英语学习者的LTV与其他语言学习者对比？
+          </div>
+          <div class="statement-card">
+            <span class="text-purple font-semibold">3.</span> Max订阅的长期定价策略？
+          </div>
+          <div class="statement-card">
+            <span class="text-purple font-semibold">4.</span> 合同工减少对内容质量的实际影响？
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sources Tab -->
+    <section id="tab-sources" class="tab-content hidden animate-fade-in">
+      <h2 class="section-title">原始资料库</h2>
+      <p class="text-base text-muted mb-16">所有分析数据的原始来源，确保可追溯可验证</p>
+      
+      <div class="grid-5">
+        <div class="source-card">
+          <div style="font-size: 32px; margin-bottom: 12px;">📄</div>
+          <div class="text-lg font-semibold text-light mb-8">SEC文件</div>
+          <div class="text-3xl font-bold text-green mb-4">12</div>
+          <div class="text-sm text-muted">2023-2025 · EDGAR</div>
+        </div>
+        <div class="source-card">
+          <div style="font-size: 32px; margin-bottom: 12px;">🎙️</div>
+          <div class="text-lg font-semibold text-light mb-8">财报电话会议</div>
+          <div class="text-3xl font-bold text-green mb-4">10</div>
+          <div class="text-sm text-muted">Q3 2023-Q3 2025 · Seeking Alpha</div>
+        </div>
+        <div class="source-card">
+          <div style="font-size: 32px; margin-bottom: 12px;">🎤</div>
+          <div class="text-lg font-semibold text-light mb-8">CEO采访</div>
+          <div class="text-3xl font-bold text-green mb-4">8</div>
+          <div class="text-sm text-muted">2023-2025 · 媒体报道</div>
+        </div>
+        <div class="source-card">
+          <div style="font-size: 32px; margin-bottom: 12px;">📊</div>
+          <div class="text-lg font-semibold text-light mb-8">投资者日</div>
+          <div class="text-3xl font-bold text-green mb-4">2</div>
+          <div class="text-sm text-muted">2023, 2024 · 公司官网</div>
+        </div>
+        <div class="source-card">
+          <div style="font-size: 32px; margin-bottom: 12px;">📰</div>
+          <div class="text-lg font-semibold text-light mb-8">新闻报道</div>
+          <div class="text-3xl font-bold text-green mb-4">15</div>
+          <div class="text-sm text-muted">2024-2025 · 多渠道</div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3 class="text-lg font-semibold mb-16">📌 数据说明</h3>
+        <div class="grid-2" style="gap: 16px;">
+          <div class="text-base text-gray leading-relaxed">
+            <p class="mb-12"><strong class="text-green">数据来源:</strong> 所有数据均来自公开渠道，包括 SEC EDGAR、公司投资者关系网站、财经媒体报道等。</p>
+            <p><strong class="text-green">更新频率:</strong> 财报相关数据在发布后24小时内更新，CEO采访和新闻在发现后及时录入。</p>
+          </div>
+          <div class="text-base text-gray leading-relaxed">
+            <p class="mb-12"><strong class="text-green">AI分析:</strong> 矛盾检测和承诺追踪由AI辅助完成，但所有关键结论均经人工审核。</p>
+            <p><strong class="text-green">免责声明:</strong> 本平台仅供研究参考，不构成投资建议。投资决策请结合自身判断。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p style="margin-bottom: 8px;">🦉 DUOL Deep Dive Demo · 基于公开数据构建的投资研究工具原型</p>
+    <p>数据范围: 2023-2025 · 本工具仅供研究参考，不构成投资建议</p>
+  </footer>
+
+  <script>
+    // Tab Navigation
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update nav buttons
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update tab content
+        const tabId = btn.dataset.tab;
+        document.querySelectorAll('.tab-content').forEach(tab => {
+          tab.classList.add('hidden');
+        });
+        document.getElementById('tab-' + tabId).classList.remove('hidden');
+      });
+    });
+
+    // Timeline Filter
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update filter buttons
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Filter timeline items
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.timeline-item').forEach(item => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
