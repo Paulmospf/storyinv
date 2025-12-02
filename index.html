@@ -368,6 +368,7 @@
         .timeline-tab[data-category="product"] .dot { background: var(--duo-orange); }
         .timeline-tab[data-category="financial"] .dot { background: var(--duo-green); }
         .timeline-tab[data-category="stock"] .dot { background: var(--duo-yellow); }
+        .timeline-tab[data-category="company-info"] .dot { background: #FF6B9D; }
 
         /* Timeline Container */
         .timeline-container {
@@ -942,20 +943,23 @@
 
         .assumption-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.75rem;
             font-size: 0.875rem;
+            line-height: 1.5;
         }
 
         .assumption-icon {
             width: 24px;
             height: 24px;
+            min-width: 24px;
             background: rgba(88, 204, 2, 0.2);
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
+            margin-top: 2px;
         }
 
         /* Chart Legend */
@@ -986,6 +990,236 @@
             width: 16px;
             height: 16px;
             border-radius: 4px;
+        }
+
+        /* Methodology Cards */
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .methodology-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .methodology-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--duo-green);
+        }
+
+        .methodology-content {
+            font-size: 0.85rem;
+        }
+
+        .calc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .calc-label {
+            color: var(--text-secondary);
+        }
+
+        .calc-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--duo-green);
+        }
+
+        .calc-detail {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding: 0.5rem 0;
+            line-height: 1.5;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .calc-detail:last-child {
+            border-bottom: none;
+        }
+
+        /* Quarterly Table Styles */
+        .quarterly-table-container {
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        .quarterly-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quarterly-table th {
+            background: var(--bg-dark);
+            padding: 1rem 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--duo-green);
+            white-space: nowrap;
+        }
+
+        .quarterly-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .quarterly-table tbody tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .quarter-badge {
+            background: var(--bg-dark);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .quarterly-table .value {
+            color: var(--text-primary);
+        }
+
+        .quarterly-table .value.negative {
+            color: var(--duo-red);
+        }
+
+        .quarterly-table .growth {
+            font-weight: 600;
+        }
+
+        .quarterly-table .growth.positive {
+            color: var(--duo-green);
+        }
+
+        .quarterly-table .growth.negative {
+            color: var(--duo-red);
+        }
+
+        .year-divider td {
+            padding: 0;
+        }
+
+        .year-header {
+            background: linear-gradient(90deg, var(--duo-green), transparent);
+            padding: 0.5rem 1rem !important;
+            font-weight: 700;
+            color: var(--bg-dark);
+            font-size: 0.9rem;
+        }
+
+        .table-notes {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding: 1rem;
+            background: var(--bg-dark);
+            border-radius: 8px;
+        }
+
+        .table-notes p {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Institutional Holdings Table */
+        .holdings-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .holdings-table th {
+            background: var(--bg-dark);
+            padding: 1rem 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--duo-blue);
+        }
+
+        .holdings-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .holdings-table tbody tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .holder-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .holder-type {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .shares-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--duo-green);
+        }
+
+        .change-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .change-badge.increase {
+            background: rgba(88, 204, 2, 0.2);
+            color: var(--duo-green);
+        }
+
+        .change-badge.decrease {
+            background: rgba(255, 75, 75, 0.2);
+            color: var(--duo-red);
+        }
+
+        .change-badge.neutral {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--duo-yellow);
+        }
+
+        .holdings-summary {
+            display: flex;
+            gap: 2rem;
+            padding: 1rem;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .holdings-summary .summary-item {
+            text-align: center;
+        }
+
+        .holdings-summary .summary-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .holdings-summary .summary-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--duo-blue);
         }
 
         /* Source Section */
@@ -1069,6 +1303,9 @@
             .prediction-summary {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .methodology-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1107,6 +1344,151 @@
         .timeline-content.active {
             display: block;
         }
+
+        /* Company Info Section Styles */
+        .company-info-container {
+            display: none;
+        }
+
+        .company-info-container.active {
+            display: block;
+        }
+
+        .company-info-quarter {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .company-info-quarter:hover {
+            border-color: #FF6B9D;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.2);
+        }
+
+        .quarter-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .quarter-badge-large {
+            background: linear-gradient(135deg, #FF6B9D, #FF8FAB);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+        }
+
+        .quarter-summary {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.2s;
+        }
+
+        .info-card:hover {
+            border-color: var(--duo-green);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card-icon {
+            font-size: 1.5rem;
+        }
+
+        .info-card-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .info-card-source {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .info-card-content {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .info-card-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-card-content li {
+            position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card-content li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #FF6B9D;
+            font-weight: bold;
+        }
+
+        .highlight-quote {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(255, 143, 171, 0.05));
+            border-left: 3px solid #FF6B9D;
+            padding: 0.75rem 1rem;
+            margin: 0.75rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-primary);
+        }
+
+        .info-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-tag.ceo { background: rgba(88, 204, 2, 0.2); color: var(--duo-green); }
+        .info-tag.earnings { background: rgba(28, 176, 246, 0.2); color: var(--duo-blue); }
+        .info-tag.media { background: rgba(165, 96, 232, 0.2); color: var(--duo-purple); }
+        .info-tag.executive { background: rgba(255, 150, 0, 0.2); color: var(--duo-orange); }
     </style>
 </head>
 <body>
@@ -1123,9 +1505,9 @@
                 <span class="ticker-change negative">-0.80%</span>
             </div>
             <nav class="nav-tabs">
-                <button class="nav-tab active">时间线分析</button>
-                <button class="nav-tab">财务数据</button>
-                <button class="nav-tab">未来预测</button>
+                <button class="nav-tab active" onclick="scrollToSection('timeline-section')">时间线分析</button>
+                <button class="nav-tab" onclick="scrollToSection('financial-section')">财务数据</button>
+                <button class="nav-tab" onclick="scrollToSection('prediction-section')">未来预测</button>
             </nav>
         </div>
     </header>
@@ -1140,19 +1522,19 @@
                 
                 <div class="key-metrics">
                     <div class="metric-card">
-                        <div class="metric-label">2024年收入</div>
-                        <div class="metric-value">$748M</div>
-                        <div class="metric-change">+40.84% YoY</div>
+                        <div class="metric-label">TTM收入 (截至Q3'25)</div>
+                        <div class="metric-value">$1.03B</div>
+                        <div class="metric-change">+38% YoY</div>
                     </div>
                     <div class="metric-card">
                         <div class="metric-label">日活跃用户</div>
-                        <div class="metric-value">46.6M</div>
-                        <div class="metric-change">+49% YoY (Q1'25)</div>
+                        <div class="metric-value">50.5M</div>
+                        <div class="metric-change">+36% YoY (Q3'25)</div>
                     </div>
                     <div class="metric-card">
                         <div class="metric-label">付费订阅用户</div>
-                        <div class="metric-value">10.3M</div>
-                        <div class="metric-change">+40% YoY (Q1'25)</div>
+                        <div class="metric-value">11.5M</div>
+                        <div class="metric-change">+34% YoY (Q3'25)</div>
                     </div>
                 </div>
             </div>
@@ -1195,9 +1577,9 @@
         </section>
 
         <!-- Data Chart -->
-        <section class="chart-section">
+        <section class="chart-section" id="financial-section">
             <div class="chart-header">
-                <div class="chart-title">📊 核心指标增长趋势 (2021-2024)</div>
+                <div class="chart-title">📊 核心指标增长趋势 (2021-2025 YTD)</div>
                 <div class="chart-legend">
                     <div class="legend-item">
                         <div class="legend-dot" style="background: var(--duo-green)"></div>
@@ -1217,7 +1599,7 @@
                 <div class="chart-bars">
                     <div class="chart-bar-group">
                         <div class="bar-container">
-                            <div class="bar bar-revenue" style="height: 84px" title="$250.77M"></div>
+                            <div class="bar bar-revenue" style="height: 67px" title="$250.77M"></div>
                             <div class="bar bar-dau" style="height: 40px" title="10.1M DAU"></div>
                             <div class="bar bar-subscribers" style="height: 25px" title="2.5M 付费"></div>
                         </div>
@@ -1225,7 +1607,7 @@
                     </div>
                     <div class="chart-bar-group">
                         <div class="bar-container">
-                            <div class="bar bar-revenue" style="height: 123px" title="$369.5M"></div>
+                            <div class="bar bar-revenue" style="height: 99px" title="$369.5M"></div>
                             <div class="bar bar-dau" style="height: 65px" title="16.3M DAU"></div>
                             <div class="bar bar-subscribers" style="height: 42px" title="4.2M 付费"></div>
                         </div>
@@ -1233,7 +1615,7 @@
                     </div>
                     <div class="chart-bar-group">
                         <div class="bar-container">
-                            <div class="bar bar-revenue" style="height: 177px" title="$531.11M"></div>
+                            <div class="bar bar-revenue" style="height: 142px" title="$531.11M"></div>
                             <div class="bar bar-dau" style="height: 108px" title="26.9M DAU"></div>
                             <div class="bar bar-subscribers" style="height: 66px" title="6.6M 付费"></div>
                         </div>
@@ -1241,18 +1623,339 @@
                     </div>
                     <div class="chart-bar-group">
                         <div class="bar-container">
-                            <div class="bar bar-revenue" style="height: 250px" title="$748.02M"></div>
+                            <div class="bar bar-revenue" style="height: 200px" title="$748.02M"></div>
                             <div class="bar bar-dau" style="height: 162px" title="40.5M DAU"></div>
                             <div class="bar bar-subscribers" style="height: 95px" title="9.5M 付费"></div>
                         </div>
                         <div class="bar-label">2024</div>
                     </div>
+                    <div class="chart-bar-group">
+                        <div class="bar-container">
+                            <div class="bar bar-revenue" style="height: 275px" title="$1,030M (FY25E)"></div>
+                            <div class="bar bar-dau" style="height: 202px" title="50.5M DAU"></div>
+                            <div class="bar bar-subscribers" style="height: 115px" title="11.5M 付费"></div>
+                        </div>
+                        <div class="bar-label">2025E</div>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Quarterly Financial Data Table -->
+        <section class="chart-section">
+            <div class="chart-header">
+                <div class="chart-title">📋 季度财务明细数据</div>
+            </div>
+            <div class="quarterly-table-container">
+                <table class="quarterly-table">
+                    <thead>
+                        <tr>
+                            <th>季度</th>
+                            <th>收入</th>
+                            <th>YoY</th>
+                            <th>净利润</th>
+                            <th>DAU</th>
+                            <th>MAU</th>
+                            <th>付费用户</th>
+                            <th>EBITDA利润率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="year-divider">
+                            <td colspan="8" class="year-header">2025</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q3</span></td>
+                            <td class="value">$271.7M</td>
+                            <td class="growth positive">+41%</td>
+                            <td class="value">$292.2M*</td>
+                            <td class="value">50.5M</td>
+                            <td class="value">135.3M</td>
+                            <td class="value">11.5M</td>
+                            <td class="value">29.5%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q2</span></td>
+                            <td class="value">$252.3M</td>
+                            <td class="growth positive">+41%</td>
+                            <td class="value">$44.8M</td>
+                            <td class="value">47.7M</td>
+                            <td class="value">128.3M</td>
+                            <td class="value">10.9M</td>
+                            <td class="value">31.2%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q1</span></td>
+                            <td class="value">$230.7M</td>
+                            <td class="growth positive">+38%</td>
+                            <td class="value">$34.5M</td>
+                            <td class="value">46.6M</td>
+                            <td class="value">130M+</td>
+                            <td class="value">10.3M</td>
+                            <td class="value">26.8%</td>
+                        </tr>
+                        <tr class="year-divider">
+                            <td colspan="8" class="year-header">2024</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q4</span></td>
+                            <td class="value">$209.6M</td>
+                            <td class="growth positive">+39%</td>
+                            <td class="value">$23.7M</td>
+                            <td class="value">40.5M</td>
+                            <td class="value">116.7M</td>
+                            <td class="value">9.5M</td>
+                            <td class="value">25.0%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q3</span></td>
+                            <td class="value">$192.6M</td>
+                            <td class="growth positive">+40%</td>
+                            <td class="value">$23.4M</td>
+                            <td class="value">37.2M</td>
+                            <td class="value">113.1M</td>
+                            <td class="value">8.6M</td>
+                            <td class="value">24.7%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q2</span></td>
+                            <td class="value">$178.3M</td>
+                            <td class="growth positive">+41%</td>
+                            <td class="value">$24.4M</td>
+                            <td class="value">34.1M</td>
+                            <td class="value">103.6M</td>
+                            <td class="value">8.0M</td>
+                            <td class="value">27.0%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q1</span></td>
+                            <td class="value">$167.6M</td>
+                            <td class="growth positive">+45%</td>
+                            <td class="value">$27.0M</td>
+                            <td class="value">31.4M</td>
+                            <td class="value">97.6M</td>
+                            <td class="value">7.4M</td>
+                            <td class="value">26.3%</td>
+                        </tr>
+                        <tr class="year-divider">
+                            <td colspan="8" class="year-header">2023</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q4</span></td>
+                            <td class="value">$151.0M</td>
+                            <td class="growth positive">+45%</td>
+                            <td class="value">$12.1M</td>
+                            <td class="value">26.9M</td>
+                            <td class="value">88.4M</td>
+                            <td class="value">6.6M</td>
+                            <td class="value">23.3%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q3</span></td>
+                            <td class="value">$137.6M</td>
+                            <td class="growth positive">+43%</td>
+                            <td class="value">$2.8M</td>
+                            <td class="value">24.2M</td>
+                            <td class="value">83.1M</td>
+                            <td class="value">5.8M</td>
+                            <td class="value">16.3%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q2</span></td>
+                            <td class="value">$126.8M</td>
+                            <td class="growth positive">+44%</td>
+                            <td class="value">$3.7M</td>
+                            <td class="value">21.4M</td>
+                            <td class="value">74.1M</td>
+                            <td class="value">5.2M</td>
+                            <td class="value">16.5%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q1</span></td>
+                            <td class="value">$115.8M</td>
+                            <td class="growth positive">+42%</td>
+                            <td class="value negative">-$2.6M</td>
+                            <td class="value">20.3M</td>
+                            <td class="value">72.6M</td>
+                            <td class="value">4.8M</td>
+                            <td class="value">13.1%</td>
+                        </tr>
+                        <tr class="year-divider">
+                            <td colspan="8" class="year-header">2022</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q4</span></td>
+                            <td class="value">$103.8M</td>
+                            <td class="growth positive">+42%</td>
+                            <td class="value negative">-$13.9M</td>
+                            <td class="value">16.3M</td>
+                            <td class="value">60.7M</td>
+                            <td class="value">4.2M</td>
+                            <td class="value">5.0%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q3</span></td>
+                            <td class="value">$96.2M</td>
+                            <td class="growth positive">+50%</td>
+                            <td class="value negative">-$14.6M</td>
+                            <td class="value">14.9M</td>
+                            <td class="value">56.5M</td>
+                            <td class="value">3.8M</td>
+                            <td class="value">4.4%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q2</span></td>
+                            <td class="value">$88.4M</td>
+                            <td class="growth positive">+50%</td>
+                            <td class="value negative">-$15.0M</td>
+                            <td class="value">13.2M</td>
+                            <td class="value">49.2M</td>
+                            <td class="value">3.3M</td>
+                            <td class="value">4.7%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="quarter-badge">Q1</span></td>
+                            <td class="value">$81.1M</td>
+                            <td class="growth positive">+47%</td>
+                            <td class="value negative">-$13.4M</td>
+                            <td class="value">12.5M</td>
+                            <td class="value">49.5M</td>
+                            <td class="value">2.9M</td>
+                            <td class="value">7.7%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-notes">
+                <p>📌 数据来源: Duolingo季度财报 (SEC 10-Q/10-K文件, 投资者关系网站)</p>
+                <p>📌 DAU/MAU为季度平均值，付费用户为季末数据</p>
+                <p>📌 *Q3 2025净利润$292.2M包含$222.7M一次性递延税资产释放，正常化净利润约为$69.5M</p>
+            </div>
+        </section>
+
+        <!-- Institutional Holdings -->
+        <section class="chart-section">
+            <div class="chart-header">
+                <div class="chart-title">🏛️ 主要机构股东持仓 (截至2025年9月)</div>
+            </div>
+            <div class="quarterly-table-container">
+                <table class="holdings-table">
+                    <thead>
+                        <tr>
+                            <th>股东名称</th>
+                            <th>持股数量</th>
+                            <th>持股比例</th>
+                            <th>持仓市值</th>
+                            <th>季度变化</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="holder-name">FMR, LLC (Fidelity)</span>
+                                <span class="holder-type">共同基金</span>
+                            </td>
+                            <td class="shares-value">3.73M</td>
+                            <td>9.54%</td>
+                            <td class="shares-value">$1.22B</td>
+                            <td><span class="change-badge neutral">持平</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="holder-name">BlackRock Inc.</span>
+                                <span class="holder-type">资产管理</span>
+                            </td>
+                            <td class="shares-value">3.65M</td>
+                            <td>9.35%</td>
+                            <td class="shares-value">$1.19B</td>
+                            <td><span class="change-badge increase">+2.1%</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="holder-name">Vanguard Group Inc.</span>
+                                <span class="holder-type">指数基金</span>
+                            </td>
+                            <td class="shares-value">3.54M</td>
+                            <td>9.07%</td>
+                            <td class="shares-value">$1.16B</td>
+                            <td><span class="change-badge increase">+1.5%</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="holder-name">Baillie Gifford & Co</span>
+                                <span class="holder-type">长期增长基金</span>
+                            </td>
+                            <td class="shares-value">2.74M</td>
+                            <td>7.02%</td>
+                            <td class="shares-value">$894M</td>
+                            <td><span class="change-badge decrease">-16.8%</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="holder-name">Durable Capital Partners</span>
+                                <span class="holder-type">对冲基金</span>
+                            </td>
+                            <td class="shares-value">2.32M</td>
+                            <td>5.94%</td>
+                            <td class="shares-value">$757M</td>
+                            <td><span class="change-badge decrease">-30.6%</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="holder-name">T. Rowe Price Associates</span>
+                                <span class="holder-type">资产管理</span>
+                            </td>
+                            <td class="shares-value">2.1M</td>
+                            <td>5.4%</td>
+                            <td class="shares-value">$685M</td>
+                            <td><span class="change-badge increase">+5.2%</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="holder-name">Capital World Investors</span>
+                                <span class="holder-type">增长基金</span>
+                            </td>
+                            <td class="shares-value">1.8M</td>
+                            <td>4.6%</td>
+                            <td class="shares-value">$587M</td>
+                            <td><span class="change-badge neutral">新建仓</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="holder-name">Dragoneer Investment Group</span>
+                                <span class="holder-type">科技成长基金</span>
+                            </td>
+                            <td class="shares-value">1.5M</td>
+                            <td>3.8%</td>
+                            <td class="shares-value">$489M</td>
+                            <td><span class="change-badge neutral">持平</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="holdings-summary">
+                <div class="summary-item">
+                    <span class="summary-label">机构持股比例</span>
+                    <span class="summary-value">84.65%</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">内部人持股</span>
+                    <span class="summary-value">23.54%</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">机构股东数量</span>
+                    <span class="summary-value">948</span>
+                </div>
+            </div>
+            <div class="table-notes">
+                <p>📌 数据来源: SEC 13F文件, 截至2025年9月30日</p>
+                <p>📌 持仓市值基于2025年9月30日股价($321.84)计算</p>
+                <p>📌 CEO Luis von Ahn持有约10%投票权(通过B类股票)</p>
+            </div>
+        </section>
+
         <!-- Timeline Section -->
-        <section class="section">
+        <section class="section" id="timeline-section">
             <div class="section-header">
                 <h2 class="section-title">
                     <span class="icon">📅</span>
@@ -1285,6 +1988,10 @@
                     <span class="dot"></span>
                     股权变动
                 </button>
+                <button class="timeline-tab" data-category="company-info" onclick="showCompanyInfo()">
+                    <span class="dot"></span>
+                    公司信息
+                </button>
             </div>
 
             <!-- Timeline Content -->
@@ -1295,14 +2002,109 @@
                         <div class="year-label">2025</div>
                         
                         <div class="quarter-group">
-                            <div class="quarter-label">Q2 2025</div>
+                            <div class="quarter-label">Q3 2025</div>
+                            <div class="timeline-item" data-category="business">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">DAU突破5000万里程碑</span>
+                                    <span class="timeline-item-category" data-category="business">业务</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    日活跃用户首次突破5000万大关，成为公司历史上的重要里程碑。MAU达到1.353亿，付费用户增至1150万。
+                                </div>
+                                <div class="timeline-item-metrics">
+                                    <div class="item-metric">
+                                        <div class="item-metric-label">DAU</div>
+                                        <div class="item-metric-value">50.5M</div>
+                                    </div>
+                                    <div class="item-metric">
+                                        <div class="item-metric-label">付费用户</div>
+                                        <div class="item-metric-value">11.5M</div>
+                                    </div>
+                                    <div class="item-metric">
+                                        <div class="item-metric-label">收入</div>
+                                        <div class="item-metric-value">$271.7M</div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="timeline-item" data-category="product">
                                 <div class="timeline-item-header">
-                                    <span class="timeline-item-title">Chess课程正式上线</span>
+                                    <span class="timeline-item-title">瑞幸咖啡联名合作</span>
                                     <span class="timeline-item-category" data-category="product">产品</span>
                                 </div>
                                 <div class="timeline-item-content">
-                                    国际象棋课程面向所有iOS英语用户开放，采用Elo评分系统，玩家可与AI教练Oscar对弈。
+                                    与中国瑞幸咖啡达成亚洲最大品牌合作，26,000+门店两周内售出超过1000万杯Duolingo主题饮品，极大提升亚洲市场品牌知名度。
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-category="product">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">LinkedIn积分展示功能</span>
+                                    <span class="timeline-item-category" data-category="product">产品</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    推出LinkedIn整合功能，用户可在职业档案中展示Duolingo语言成绩，强化Duolingo作为语言能力认证标准的地位。
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-category="culture">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">战略转向长期增长</span>
+                                    <span class="timeline-item-category" data-category="culture">文化</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    CEO Luis von Ahn宣布公司战略重心从短期变现转向长期用户增长和AI教学创新，尽管导致股价短期下跌25%，但坚持"take the long view"理念。
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quarter-group">
+                            <div class="quarter-label">Q2 2025</div>
+                            <div class="timeline-item" data-category="business">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">Chess课程爆发式增长</span>
+                                    <span class="timeline-item-category" data-category="business">业务</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    国际象棋课程成为公司历史上增长最快的学科，超过语言学习。季末DAU超过100万，仅在iOS英语版本就取得突破。
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-category="product">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">Energy能量系统上线</span>
+                                    <span class="timeline-item-category" data-category="product">产品</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    推出新的Energy能量系统替代Hearts(红心)，采用"奖励成功"而非"惩罚错误"的设计理念。测试显示同时提升DAU、学习时长和付费转化率，罕见的三指标同涨。
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-category="financial">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">Q2财报超预期</span>
+                                    <span class="timeline-item-category" data-category="financial">财务</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    收入同比增长41%达$252.3M，净利润$44.8M同比增84%。Adjusted EBITDA利润率达到创纪录的31.2%，AI成本低于预期。
+                                </div>
+                                <div class="timeline-item-metrics">
+                                    <div class="item-metric">
+                                        <div class="item-metric-label">DAU</div>
+                                        <div class="item-metric-value">47.7M</div>
+                                    </div>
+                                    <div class="item-metric">
+                                        <div class="item-metric-label">付费用户</div>
+                                        <div class="item-metric-value">10.9M</div>
+                                    </div>
+                                    <div class="item-metric">
+                                        <div class="item-metric-label">收入</div>
+                                        <div class="item-metric-value">$252.3M</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-category="stock">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">收购NextBeat音乐游戏公司</span>
+                                    <span class="timeline-item-category" data-category="stock">股权</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    收购伦敦音乐游戏公司NextBeat(23名员工)，为公司最大规模人才收购。NextBeat曾开发Beatstar等音乐游戏，将助力Duolingo Music发展。
                                 </div>
                             </div>
                         </div>
@@ -1339,6 +2141,15 @@
                                 </div>
                                 <div class="timeline-item-content">
                                     CEO Luis von Ahn宣布公司将在AI可胜任的领域逐步减少外包承包商使用，强调"宁可接受偶尔的质量下降，也不愿行动迟缓错过时机"。
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-category="stock">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">Ray Dalio增持</span>
+                                    <span class="timeline-item-category" data-category="stock">股权</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    桥水基金Ray Dalio在Q4 2024增持DUOL，显示对公司增长和AI战略的信心。
                                 </div>
                             </div>
                         </div>
@@ -1446,6 +2257,33 @@
                                 </div>
                                 <div class="timeline-item-content">
                                     收购底特律设计工作室Hobbes，加强设计和动画能力。
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-category="stock">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">Ron Baron建仓</span>
+                                    <span class="timeline-item-category" data-category="stock">股权</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    亿万富翁投资者Ron Baron在Q3 2024首次建仓DUOL，看好公司游戏化教育和AI创新的独特结合。
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-category="stock">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">Baillie Gifford减持</span>
+                                    <span class="timeline-item-category" data-category="stock">股权</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    长期股东Baillie Gifford减持约16.82%仓位，但仍持有约274万股(7.02%)，价值约8.9亿美元，仍为前五大股东之一。
+                                </div>
+                            </div>
+                            <div class="timeline-item" data-category="stock">
+                                <div class="timeline-item-header">
+                                    <span class="timeline-item-title">Durable Capital减持</span>
+                                    <span class="timeline-item-category" data-category="stock">股权</span>
+                                </div>
+                                <div class="timeline-item-content">
+                                    Durable Capital Partners减持约30.63%仓位，但仍持有约232万股(5.94%)，价值约7.6亿美元。
                                 </div>
                             </div>
                         </div>
@@ -1737,10 +2575,529 @@
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Prediction Section -->
-        <section class="prediction-section">
+            <!-- Company Info Content -->
+            <div class="company-info-container" id="company-info-container">
+                <!-- Q3 2025 -->
+                <div class="company-info-quarter">
+                    <div class="quarter-header">
+                        <span class="quarter-badge-large">Q3 2025</span>
+                        <span class="quarter-summary">DAU突破5000万里程碑 | 战略转向长期增长 | 瑞幸联名大获成功</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">👔</span>
+                                <div>
+                                    <div class="info-card-title">CEO观点与战略</div>
+                                    <div class="info-card-source">来源: 财报电话会、媒体访谈</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag ceo">Luis von Ahn</span>
+                                <ul>
+                                    <li>宣布公司战略从短期变现转向长期用户增长</li>
+                                    <li>强调"take the long view"理念，即使导致股价短期下跌25%</li>
+                                    <li>表示对AI竞争"不特别担心"，认为Duolingo的用户粘性和课程深度构成护城河</li>
+                                </ul>
+                                <div class="highlight-quote">
+                                    "我们选择牺牲短期盈利，专注于构建真正改变教育的产品。"
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📊</span>
+                                <div>
+                                    <div class="info-card-title">财报亮点</div>
+                                    <div class="info-card-source">来源: Q3 2025财报、10-Q文件</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">财报数据</span>
+                                <ul>
+                                    <li>收入$271.7M，同比增长41%</li>
+                                    <li>DAU首次突破5000万大关(50.5M)</li>
+                                    <li>付费用户达1150万，同比增长34%</li>
+                                    <li>净利润$292.2M (含$222.7M一次性税务收益)</li>
+                                    <li>正常化净利润约$69.5M</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">🎤</span>
+                                <div>
+                                    <div class="info-card-title">媒体与公关</div>
+                                    <div class="info-card-source">来源: CNBC、TechCrunch、公司博客</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag media">媒体报道</span>
+                                <ul>
+                                    <li>与瑞幸咖啡达成亚洲最大品牌合作</li>
+                                    <li>26,000+门店两周售出1000万+杯联名饮品</li>
+                                    <li>LinkedIn积分展示功能获广泛报道</li>
+                                    <li>股价因战略调整单日暴跌25%引发热议</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📞</span>
+                                <div>
+                                    <div class="info-card-title">财报电话会要点</div>
+                                    <div class="info-card-source">来源: Earnings Call Transcript</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">电话会</span>
+                                <ul>
+                                    <li>管理层解释战略转型原因和长期愿景</li>
+                                    <li>确认将减少对短期变现指标的关注</li>
+                                    <li>强调AI教学创新是核心优先级</li>
+                                    <li>分析师对短期盈利前景表示担忧</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 2025 -->
+                <div class="company-info-quarter">
+                    <div class="quarter-header">
+                        <span class="quarter-badge-large">Q2 2025</span>
+                        <span class="quarter-summary">Chess课程爆发式增长 | Energy系统上线 | 超预期业绩</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">👔</span>
+                                <div>
+                                    <div class="info-card-title">CEO观点与战略</div>
+                                    <div class="info-card-source">来源: 财报电话会、投资者日</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag ceo">Luis von Ahn</span>
+                                <ul>
+                                    <li>宣布Chess成为公司历史上增长最快的学科</li>
+                                    <li>强调多学科扩展战略的成功验证</li>
+                                    <li>讨论AI如何改变内容创作效率</li>
+                                </ul>
+                                <div class="highlight-quote">
+                                    "Chess的成功证明了我们的游戏化学习方法可以超越语言，应用到任何学科。"
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📊</span>
+                                <div>
+                                    <div class="info-card-title">财报亮点</div>
+                                    <div class="info-card-source">来源: Q2 2025财报</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">财报数据</span>
+                                <ul>
+                                    <li>收入$252.3M，同比增长41%</li>
+                                    <li>DAU达4770万，净增300万</li>
+                                    <li>付费用户1090万</li>
+                                    <li>净利润$44.8M</li>
+                                    <li>调整后EBITDA利润率31.2%</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">🎤</span>
+                                <div>
+                                    <div class="info-card-title">产品与市场动态</div>
+                                    <div class="info-card-source">来源: 公司公告、App Store</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag media">产品更新</span>
+                                <ul>
+                                    <li>Energy能量系统替代Hearts红心系统</li>
+                                    <li>"奖励成功"而非"惩罚错误"的新设计理念</li>
+                                    <li>罕见的DAU、学习时长、付费转化三指标同涨</li>
+                                    <li>Chess课程iOS DAU突破100万</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📞</span>
+                                <div>
+                                    <div class="info-card-title">财报电话会要点</div>
+                                    <div class="info-card-source">来源: Earnings Call Transcript</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">电话会</span>
+                                <ul>
+                                    <li>上调全年收入指引</li>
+                                    <li>讨论新学科扩展的ROI和时间表</li>
+                                    <li>确认Max订阅层级的渗透率提升</li>
+                                    <li>强调AI驱动的个性化学习效果</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q1 2025 -->
+                <div class="company-info-quarter">
+                    <div class="quarter-header">
+                        <span class="quarter-badge-large">Q1 2025</span>
+                        <span class="quarter-summary">DAU创季度新高 | AI优先战略 | Ray Dalio增持</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">👔</span>
+                                <div>
+                                    <div class="info-card-title">CEO观点与战略</div>
+                                    <div class="info-card-source">来源: 内部邮件、媒体访谈</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag ceo">Luis von Ahn</span>
+                                <ul>
+                                    <li>宣布将在AI可胜任领域减少外包承包商</li>
+                                    <li>强调"宁可质量偶尔下降，也不愿错失时机"</li>
+                                    <li>讨论AI如何重塑教育内容生产</li>
+                                </ul>
+                                <div class="highlight-quote">
+                                    "AI正在根本性地改变我们创建教育内容的方式，速度和规模都是以前无法想象的。"
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📊</span>
+                                <div>
+                                    <div class="info-card-title">财报亮点</div>
+                                    <div class="info-card-source">来源: Q1 2025财报</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">财报数据</span>
+                                <ul>
+                                    <li>收入$230.7M，同比增长38%</li>
+                                    <li>单季度净增600万DAU，达4660万</li>
+                                    <li>MAU突破1.3亿</li>
+                                    <li>付费用户1030万</li>
+                                    <li>净利润$34.5M</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">💼</span>
+                                <div>
+                                    <div class="info-card-title">高管与股权动态</div>
+                                    <div class="info-card-source">来源: SEC 13F文件</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag executive">股权变动</span>
+                                <ul>
+                                    <li>桥水基金Ray Dalio在Q4'24增持DUOL</li>
+                                    <li>显示对公司增长和AI战略的信心</li>
+                                    <li>机构持股比例保持稳定</li>
+                                    <li>CEO持有约10%投票权(B类股票)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📞</span>
+                                <div>
+                                    <div class="info-card-title">财报电话会要点</div>
+                                    <div class="info-card-source">来源: Earnings Call Transcript</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">电话会</span>
+                                <ul>
+                                    <li>确认全年增长指引维持不变</li>
+                                    <li>讨论AI工具对运营效率的影响</li>
+                                    <li>分析师关注承包商裁员的舆论影响</li>
+                                    <li>管理层强调长期价值创造</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q4 2024 -->
+                <div class="company-info-quarter">
+                    <div class="quarter-header">
+                        <span class="quarter-badge-large">Q4 2024</span>
+                        <span class="quarter-summary">DAU破4000万 | AdAge年度营销商 | 创纪录财务表现</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">👔</span>
+                                <div>
+                                    <div class="info-card-title">CEO观点与战略</div>
+                                    <div class="info-card-source">来源: 年度股东信、媒体访谈</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag ceo">Luis von Ahn</span>
+                                <ul>
+                                    <li>回顾2024年作为"突破之年"</li>
+                                    <li>确认多学科扩展将是2025年核心战略</li>
+                                    <li>讨论社交媒体营销如何建立品牌壁垒</li>
+                                </ul>
+                                <div class="highlight-quote">
+                                    "超过1000万用户保持一年以上连续学习记录，这证明了习惯养成的力量。"
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📊</span>
+                                <div>
+                                    <div class="info-card-title">财报亮点</div>
+                                    <div class="info-card-source">来源: 2024年报、10-K文件</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">全年财报</span>
+                                <ul>
+                                    <li>全年收入$748M，同比增长41%</li>
+                                    <li>净利润$88.6M，同比增长451%</li>
+                                    <li>自由现金流利润率42%</li>
+                                    <li>Q4 DAU达4050万，同比+51%</li>
+                                    <li>付费用户950万</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">🏆</span>
+                                <div>
+                                    <div class="info-card-title">荣誉与媒体</div>
+                                    <div class="info-card-source">来源: AdAge、社交媒体</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag media">行业认可</span>
+                                <ul>
+                                    <li>获得AdAge"年度营销商"称号</li>
+                                    <li>YouTube Shorts浏览量增长430%</li>
+                                    <li>Instagram Reels浏览量增长450%</li>
+                                    <li>"疯狂但正能量"营销策略获行业认可</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📞</span>
+                                <div>
+                                    <div class="info-card-title">财报电话会要点</div>
+                                    <div class="info-card-source">来源: Earnings Call Transcript</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">电话会</span>
+                                <ul>
+                                    <li>发布2025年增长指引</li>
+                                    <li>讨论Video Call with Lily的早期数据</li>
+                                    <li>确认Math/Music登陆Android的时间表</li>
+                                    <li>分析师对估值和增长持续性提问</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 2024 -->
+                <div class="company-info-quarter">
+                    <div class="quarter-header">
+                        <span class="quarter-badge-large">Q3 2024</span>
+                        <span class="quarter-summary">Video Call上线 | 英语学习者参与度翻倍 | 中国市场扩张</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">👔</span>
+                                <div>
+                                    <div class="info-card-title">CEO观点与战略</div>
+                                    <div class="info-card-source">来源: 产品发布会、访谈</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag ceo">Luis von Ahn</span>
+                                <ul>
+                                    <li>介绍Video Call with Lily作为AI对话练习突破</li>
+                                    <li>讨论中国市场成为第二大市场的战略意义</li>
+                                    <li>强调口语练习是未来产品重点</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📊</span>
+                                <div>
+                                    <div class="info-card-title">财报亮点</div>
+                                    <div class="info-card-source">来源: Q3 2024财报</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">财报数据</span>
+                                <ul>
+                                    <li>收入$192.6M，同比增长40%</li>
+                                    <li>DAU达3720万</li>
+                                    <li>付费用户860万</li>
+                                    <li>净利润$23.4M</li>
+                                    <li>中国市场占比达5-6%</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">🚀</span>
+                                <div>
+                                    <div class="info-card-title">产品里程碑</div>
+                                    <div class="info-card-source">来源: 公司博客、App更新</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag media">产品发布</span>
+                                <ul>
+                                    <li>Video Call with Lily正式上线</li>
+                                    <li>英语学习者参与度是其他语言2倍</li>
+                                    <li>Math & Music登陆Android平台</li>
+                                    <li>实现iOS与Android功能平等</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📞</span>
+                                <div>
+                                    <div class="info-card-title">财报电话会要点</div>
+                                    <div class="info-card-source">来源: Earnings Call Transcript</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">电话会</span>
+                                <ul>
+                                    <li>讨论Video Call功能的早期用户反馈</li>
+                                    <li>说明Duolingo Max在中国的监管情况</li>
+                                    <li>确认Q4季节性增长预期</li>
+                                    <li>分析师关注中国地缘政治风险</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 2024 -->
+                <div class="company-info-quarter">
+                    <div class="quarter-header">
+                        <span class="quarter-badge-large">Q2 2024</span>
+                        <span class="quarter-summary">付费用户破800万 | DAU增长59% | 营销效率持续提升</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📊</span>
+                                <div>
+                                    <div class="info-card-title">财报亮点</div>
+                                    <div class="info-card-source">来源: Q2 2024财报</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">财报数据</span>
+                                <ul>
+                                    <li>收入$178.3M，同比增长41%</li>
+                                    <li>DAU达3400万，同比+59%</li>
+                                    <li>付费用户突破800万大关</li>
+                                    <li>DAU/MAU比率33%</li>
+                                    <li>净利润$24.4M</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📞</span>
+                                <div>
+                                    <div class="info-card-title">财报电话会要点</div>
+                                    <div class="info-card-source">来源: Earnings Call Transcript</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">电话会</span>
+                                <ul>
+                                    <li>管理层讨论用户粘性持续提升的驱动因素</li>
+                                    <li>确认产品创新和社交功能的贡献</li>
+                                    <li>强调免费增值模式的长期可持续性</li>
+                                    <li>分析师询问竞争格局变化</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q1 2024 -->
+                <div class="company-info-quarter">
+                    <div class="quarter-header">
+                        <span class="quarter-badge-large">Q1 2024</span>
+                        <span class="quarter-summary">AI取代10%承包商 | 行业热议 | 增长势头强劲</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">👔</span>
+                                <div>
+                                    <div class="info-card-title">CEO观点与战略</div>
+                                    <div class="info-card-source">来源: 公司声明、媒体报道</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag ceo">Luis von Ahn</span>
+                                <ul>
+                                    <li>确认解雇约10%合同工</li>
+                                    <li>强调"生成式AI正在加速我们的工作"</li>
+                                    <li>引发AI替代人工的广泛行业讨论</li>
+                                </ul>
+                                <div class="highlight-quote">
+                                    "AI帮助我们更快地创建新内容，这是内容生产效率的根本性提升。"
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <span class="info-card-icon">📊</span>
+                                <div>
+                                    <div class="info-card-title">财报亮点</div>
+                                    <div class="info-card-source">来源: Q1 2024财报</div>
+                                </div>
+                            </div>
+                            <div class="info-card-content">
+                                <span class="info-tag earnings">财报数据</span>
+                                <ul>
+                                    <li>收入$167.6M，同比增长45%</li>
+                                    <li>DAU达3140万</li>
+                                    <li>付费用户740万</li>
+                                    <li>净利润$27.0M</li>
+                                    <li>调整后EBITDA利润率26.3%</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="prediction-section" id="prediction-section">
             <div class="prediction-header">
                 <h2>🔮 未来10年中性预测</h2>
                 <p>基于历史增长趋势、市场规模和竞争格局的合理假设</p>
@@ -2052,39 +3409,167 @@
             </div>
 
             <div class="prediction-assumptions">
-                <h4>📊 预测假设条件</h4>
-                <div class="assumption-list">
+                <h4>📊 预测方法论与计算依据</h4>
+                <div class="methodology-grid">
+                    <div class="methodology-card">
+                        <div class="methodology-title">📈 收入预测依据</div>
+                        <div class="methodology-content">
+                            <div class="calc-item">
+                                <span class="calc-label">历史CAGR (2021-2024):</span>
+                                <span class="calc-value">44%</span>
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">2025E预测:</span>
+                                <span class="calc-value">$1.03B (+38%)</span>
+                            </div>
+                            <div class="calc-detail">
+                                基于公司Q3后更新的全年指引($1.0275B-$1.0315B)，前三季度累计收入$754.7M，Q4指引$273-277M。
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">2027E预测:</span>
+                                <span class="calc-value">$1.25B (CAGR 25%)</span>
+                            </div>
+                            <div class="calc-detail">
+                                假设增速从40%逐步下降至25%，符合规模扩大后的自然减速规律。参考SaaS公司成熟期增速。
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">2030E预测:</span>
+                                <span class="calc-value">$2.0B (CAGR 17%)</span>
+                            </div>
+                            <div class="calc-detail">
+                                语言学习市场2027年预计$1230亿(HolonIQ)。假设Duolingo维持~1.5%市场份额，增速降至15-20%。
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">2035E预测:</span>
+                                <span class="calc-value">$5.0B (CAGR 20%)</span>
+                            </div>
+                            <div class="calc-detail">
+                                假设Math、Music、Chess等新学科贡献额外增长动力，付费转化率从8%提升至12-15%，Duolingo Max渗透率达15-20%。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="methodology-card">
+                        <div class="methodology-title">👥 用户增长依据</div>
+                        <div class="methodology-content">
+                            <div class="calc-item">
+                                <span class="calc-label">当前MAU:</span>
+                                <span class="calc-value">135.3M (Q3'25)</span>
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">当前DAU:</span>
+                                <span class="calc-value">50.5M (Q3'25)</span>
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">历史MAU CAGR:</span>
+                                <span class="calc-value">~35%</span>
+                            </div>
+                            <div class="calc-detail">
+                                2021年约50M → 2024年116.7M → 2025 Q3: 135.3M，三年复合增长约32%。
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">2030E MAU:</span>
+                                <span class="calc-value">350M</span>
+                            </div>
+                            <div class="calc-detail">
+                                假设年增速从30%降至15%。全球智能手机用户约68亿，语言学习需求渗透率仍有提升空间，中国已成为第二大市场。
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">付费转化率:</span>
+                                <span class="calc-value">9% → 12-15%</span>
+                            </div>
+                            <div class="calc-detail">
+                                当前付费转化~9%，通过Duolingo Max、Family Plan(Q3占29%)、本地化定价等手段预计可提升至12-15%。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="methodology-card">
+                        <div class="methodology-title">💰 盈利预测依据</div>
+                        <div class="methodology-content">
+                            <div class="calc-item">
+                                <span class="calc-label">2025 EBITDA利润率:</span>
+                                <span class="calc-value">~29% (FY指引)</span>
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">管理层长期目标:</span>
+                                <span class="calc-value">EBITDA 30-35%</span>
+                            </div>
+                            <div class="calc-detail">
+                                2025年Q2 EBITDA利润率达31.2%创纪录，Q3为29.5%。AI成本持续下降，全年指引约29%。
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">2030E净利润:</span>
+                                <span class="calc-value">$500M (25%利润率)</span>
+                            </div>
+                            <div class="calc-detail">
+                                假设规模效应持续释放，AI降低内容生产成本，净利润率逐步提升至25%。
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">2035E净利润:</span>
+                                <span class="calc-value">$1B+ (20%利润率)</span>
+                            </div>
+                            <div class="calc-detail">
+                                考虑新学科扩展投入，保守假设净利润率维持20%。$5B收入 × 20% = $1B。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="methodology-card">
+                        <div class="methodology-title">🏛️ 市值预测依据</div>
+                        <div class="methodology-content">
+                            <div class="calc-item">
+                                <span class="calc-label">当前P/E:</span>
+                                <span class="calc-value">~24x (TTM)</span>
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">历史高点P/S:</span>
+                                <span class="calc-value">~30x</span>
+                            </div>
+                            <div class="calc-detail">
+                                高增长SaaS公司典型估值区间P/S 10-20x，P/E 30-60x。
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">2030E市值:</span>
+                                <span class="calc-value">$25B</span>
+                            </div>
+                            <div class="calc-detail">
+                                假设P/E 50x × $500M净利润 = $25B。或P/S 12.5x × $2B收入。
+                            </div>
+                            <div class="calc-item">
+                                <span class="calc-label">2035E市值:</span>
+                                <span class="calc-value">$40-60B</span>
+                            </div>
+                            <div class="calc-detail">
+                                保守: P/E 40x × $1B = $40B<br>
+                                乐观: P/E 60x × $1B = $60B<br>
+                                取决于增长持续性和市场情绪。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Factors -->
+            <div class="prediction-assumptions" style="margin-top: 1.5rem;">
+                <h4>⚠️ 关键风险因素</h4>
+                <div class="assumption-list" style="grid-template-columns: 1fr;">
                     <div class="assumption-item">
-                        <span class="assumption-icon">📈</span>
-                        <span>收入年复合增长率: 20-25% (2025-2030), 12-15% (2030-2035)</span>
+                        <span class="assumption-icon" style="background: rgba(255, 75, 75, 0.2);">🤖</span>
+                        <span><strong>AI竞争风险:</strong> ChatGPT等通用AI可能分流语言学习需求，但CEO表示"不特别担心"，认为Duolingo的用户粘性和课程深度构成护城河</span>
                     </div>
                     <div class="assumption-item">
-                        <span class="assumption-icon">👥</span>
-                        <span>付费转化率: 从~8%提升至12-15%</span>
+                        <span class="assumption-icon" style="background: rgba(255, 75, 75, 0.2);">📉</span>
+                        <span><strong>短期变现压力:</strong> 管理层Q3宣布转向长期用户增长，牺牲短期变现，导致股价单日暴跌25%，投资者对近期盈利预期需要调整</span>
                     </div>
                     <div class="assumption-item">
-                        <span class="assumption-icon">🌍</span>
-                        <span>全球语言学习市场2027年预计达$1230亿(HolonIQ)</span>
+                        <span class="assumption-icon" style="background: rgba(255, 75, 75, 0.2);">🎓</span>
+                        <span><strong>新学科执行风险:</strong> Chess虽成最快增长学科，但仍在iOS英语版测试阶段；Math/Music能否规模化变现存在不确定性</span>
                     </div>
                     <div class="assumption-item">
-                        <span class="assumption-icon">🎯</span>
-                        <span>长期EBITDA利润率目标: 30-35%</span>
+                        <span class="assumption-icon" style="background: rgba(255, 75, 75, 0.2);">🌏</span>
+                        <span><strong>中国市场政策风险:</strong> 中国已成为第二大市场(占5-6%)，但Duolingo Max尚未获得监管批准，地缘政治因素可能影响业务扩展</span>
                     </div>
                     <div class="assumption-item">
-                        <span class="assumption-icon">🧠</span>
-                        <span>AI投资持续提升内容生产效率和个性化体验</span>
-                    </div>
-                    <div class="assumption-item">
-                        <span class="assumption-icon">📚</span>
-                        <span>多学科扩展(Math, Music, Chess等)带来新增长点</span>
-                    </div>
-                    <div class="assumption-item">
-                        <span class="assumption-icon">💰</span>
-                        <span>Duolingo Max高端订阅推动ARPU增长</span>
-                    </div>
-                    <div class="assumption-item">
-                        <span class="assumption-icon">⚠️</span>
-                        <span>风险: AI竞争、市场饱和、新产品执行</span>
+                        <span class="assumption-icon" style="background: rgba(255, 75, 75, 0.2);">💵</span>
+                        <span><strong>估值波动风险:</strong> 股价从52周高点$544跌至$189，估值重估风险显著；高增长公司对指引敏感度极高</span>
                     </div>
                 </div>
             </div>
@@ -2112,13 +3597,18 @@
         <!-- Footer -->
         <footer class="footer">
             <p>⚠️ 免责声明：本分析仅供研究参考，不构成投资建议。投资有风险，决策需谨慎。</p>
-            <p style="margin-top: 0.5rem;">Demo原型 | 数据截止于2025年Q1 | 生成日期: 2025年12月</p>
+            <p style="margin-top: 0.5rem;">Demo原型 | 数据截止于2025年Q3 | 生成日期: 2025年12月</p>
+            <p style="margin-top: 0.25rem; font-size: 0.75rem; color: var(--text-muted);">*Q3 2025净利润包含$222.7M一次性递延税资产释放，正常化净利润约为$69.5M</p>
         </footer>
     </main>
 
     <script>
         // Timeline filter functionality
         function filterTimeline(category) {
+            // Hide company info, show timeline
+            document.querySelector('.timeline-container').style.display = 'block';
+            document.getElementById('company-info-container').classList.remove('active');
+
             // Update tab states
             document.querySelectorAll('.timeline-tab').forEach(tab => {
                 tab.classList.remove('active');
@@ -2135,6 +3625,82 @@
                 }
             });
         }
+
+        // Show Company Info view
+        function showCompanyInfo() {
+            // Hide timeline, show company info
+            document.querySelector('.timeline-container').style.display = 'none';
+            document.getElementById('company-info-container').classList.add('active');
+
+            // Update tab states
+            document.querySelectorAll('.timeline-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector('[data-category="company-info"]').classList.add('active');
+
+            // Add animation to company info quarters
+            document.querySelectorAll('.company-info-quarter').forEach((quarter, index) => {
+                quarter.style.animation = `fadeInUp 0.5s ease ${index * 0.1}s forwards`;
+                quarter.style.opacity = '0';
+                setTimeout(() => {
+                    quarter.style.opacity = '1';
+                }, index * 100);
+            });
+        }
+
+        // Scroll to section functionality
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const headerOffset = 100;
+                const elementPosition = section.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // Update nav tab active state
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                event.target.classList.add('active');
+            }
+        }
+
+        // Update nav tabs based on scroll position
+        function updateNavOnScroll() {
+            const sections = ['timeline-section', 'financial-section', 'prediction-section'];
+            const navTabs = document.querySelectorAll('.nav-tab');
+            
+            let currentSection = '';
+            const scrollPosition = window.scrollY + 150;
+            
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section && section.offsetTop <= scrollPosition) {
+                    currentSection = sectionId;
+                }
+            });
+            
+            navTabs.forEach((tab, index) => {
+                tab.classList.remove('active');
+                if ((index === 0 && currentSection === 'timeline-section') ||
+                    (index === 1 && currentSection === 'financial-section') ||
+                    (index === 2 && currentSection === 'prediction-section')) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Default to first tab if no section matched
+            if (!currentSection) {
+                navTabs[0].classList.add('active');
+            }
+        }
+
+        // Add scroll listener
+        window.addEventListener('scroll', updateNavOnScroll);
 
         // Bar chart tooltips
         document.querySelectorAll('.bar').forEach(bar => {
@@ -2168,17 +3734,10 @@
             });
         });
 
-        // Smooth scroll for navigation
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             console.log('Duolingo Research Dashboard Loaded');
+            updateNavOnScroll();
         });
     </script>
 </body>
